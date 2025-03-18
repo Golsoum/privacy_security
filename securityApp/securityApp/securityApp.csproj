@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="hammer icon.jpg" />
+    <None Remove="key.jpg" />
+    <None Remove="lock.png" />
+    <None Remove="openLock.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="hammer icon.jpg" />
+    <Resource Include="key.jpg" />
+    <Resource Include="lock.png" />
+    <Resource Include="openLock.png" />
+  </ItemGroup>
+
+</Project>
