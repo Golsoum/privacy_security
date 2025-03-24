@@ -5,56 +5,193 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:securityApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="900">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
 
-        </Grid.ColumnDefinitions>
+        <!-- Menu -->
+        <Menu Grid.Row="0">
+            <MenuItem Header="Instellingen">
+                <MenuItem Header="Sleutel map instellen"/>
+                <MenuItem Header="Ciphertext map instellen"/>
+                <MenuItem Header="Plaintext map instellen"/>
+                <MenuItem Header="RSA Ciphertext map instellen"/>
+            </MenuItem>
+            <MenuItem Header="Sleutels">
+                <MenuItem Header="AES Sleutel genereren"/>
+                <MenuItem Header="RSA Sleutelpaar genereren"/>
+            </MenuItem>
+        </Menu>
 
-        <WrapPanel Margin="10 10 10 10">
-            <Label Content="Selecteer een bestand" />
-            <TextBox Name="filePathTextBox" Width="170" IsReadOnly="True"/>
-            <Button Content="Browse" Name="browseButton" Width="60" Margin="10 0 0 0"/>
-        </WrapPanel>
+        <!-- Hoofdinhoud tabs -->
+        <TabControl Margin="12,2,8,2" Grid.Row="1">
+            <!-- Key Generation Tab -->
+            <TabItem Header="Sleutels Genereren">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="229*"/>
+                        <ColumnDefinition Width="198*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-        <WrapPanel Grid.Row="1" Margin="10 10 10 10">
-            <Label Content="Kies AES sleutel"/>
-            <ComboBox Name="aesKeyComboBox" Width="200" Margin="35 0 0 0"></ComboBox>
-        </WrapPanel>
-        <WrapPanel Grid.Row="2" Margin="10 10 10 10">
-            <Label Content="Kies RSA sleutel"/>
-            <ComboBox Name="rsaKeyComboBox" Width="200"  Margin="35 0 0 0"></ComboBox>
-        </WrapPanel>
-        <StackPanel Grid.Column="1" Grid.RowSpan="2">
-            <Button  Name="encryptButton" Margin="10 10 10 10" Width="60">
-                <Image Source="/lock.png" />
-            </Button>
-            <Button Name="decryptButton" Margin="10 10 10 10" Width="60">
-                <Image Source="/openLock.png"/>
-            </Button>
-        </StackPanel>
-        <StackPanel Grid.Column="2" Grid.RowSpan="2">
-            <Button  Name="GenerateAesKeyButton" Margin="10 10 10 10" Width="60">
-                <Image Source="/hammer icon.jpg" />
-            </Button>
-            <Button Name="GenerateRsaKeysButton" Margin="10 10 10 10" Width="60">
-                <Image Source="/key.jpg"/>
-            </Button>
-        </StackPanel>
-        <WrapPanel Grid.Row="3" Margin="10 10 10 10">
-            <Label Content="Status"></Label>
-            <TextBox x:Name="statusTextBox" Width="200" HorizontalAlignment="Left" IsReadOnly="True"  Margin="85 0 0 0"/>
-        </WrapPanel>
-        <ProgressBar x:Name="progressBar" Width="800"  Height="30" Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Left"></ProgressBar>
+                    <TextBlock Grid.Row="0" Text="Sleutel Generatie" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Grid.ColumnSpan="2"/>
+
+                    <!-- Sleutelnaam invoeren -->
+                    <StackPanel Grid.Row="1" Margin="0,10,0,10" Grid.ColumnSpan="2">
+                        <Label Content="Geef de sleutel een naam:"/>
+                        <TextBox x:Name="txtKeyName" Margin="0,5"/>
+                    </StackPanel>
+
+                    <!-- Knoppen sleutelgeneratie -->
+                    <StackPanel Grid.Row="2" Margin="0,10,0,10" Grid.ColumnSpan="2">
+                        <Button Content="AES Sleutel Genereren" Padding="10,5" Margin="0,5"/>
+                        <Button Content="RSA Sleutelpaar Genereren" Padding="10,5" Margin="0,5"/>
+                    </StackPanel>
+
+                    <!-- Lijst beschikbare sleutels -->
+                    <TextBlock Grid.Row="3" Text="Beschikbare Sleutels:" FontWeight="Bold" Margin="0,10,0,5" Grid.ColumnSpan="2"/>
+                    <ListBox Grid.Row="4" Name="lbAvailableKeys" Margin="0,5,0,5" Grid.ColumnSpan="2"/>
+                </Grid>
+            </TabItem>
+
+            <!-- AES Encryption Tab -->
+            <TabItem Header="AES Encryptie/Decryptie">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Encryptie sectie -->
+                    <GroupBox Grid.Column="0" Header="Encryptie" Margin="5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Content="Selecteer AES sleutel:" Margin="5"/>
+                            <ComboBox Grid.Row="1" x:Name="cbAesEncryptKeys" Margin="5"/>
+
+                            <Label Grid.Row="2" Content="Selecteer afbeelding om te encrypteren:" Margin="5"/>
+                            <Border Grid.Row="3" BorderBrush="LightGray" BorderThickness="1" Margin="5" AllowDrop="True" Name="bdEncryptImageDrop">
+                                <Grid>
+                                    <TextBlock x:Name="txtEncryptImagePath" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Sleep een afbeelding hier naartoe of klik op 'Bladeren'"/>
+                                    <Image x:Name="imgEncryptPreview" Stretch="Uniform" Visibility="Collapsed"/>
+                                </Grid>
+                            </Border>
+
+                            <Button Grid.Row="4" Content="Bladeren..." Margin="5"/>
+                            <Button Grid.Row="5" Content="Encrypteren" Margin="5" Background="#FFD5F5D5"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Decryptie sectie -->
+                    <GroupBox Grid.Column="1" Header="Decryptie" Margin="5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Content="Selecteer AES sleutel:" Margin="5"/>
+                            <ComboBox Grid.Row="1" x:Name="cbAesDecryptKeys" Margin="5"/>
+
+                            <Label Grid.Row="2" Content="Selecteer versleuteld bestand:" Margin="5"/>
+                            <ComboBox Grid.Row="3" x:Name="cbCipherTextFiles" Margin="5"/>
+
+                            <Border Grid.Row="4" BorderBrush="LightGray" BorderThickness="1" Margin="5">
+                                <TextBlock x:Name="txtDecryptStatus" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Geen bestand geselecteerd"/>
+                            </Border>
+
+                            <Label Grid.Row="5" Content="Hash van gedecrypteerde afbeelding:" Margin="5"/>
+                            <TextBox Grid.Row="6" x:Name="txtDecryptedImageHash" Margin="5" IsReadOnly="True" TextWrapping="Wrap"/>
+
+                            <Button Grid.Row="7" Content="Decrypteren" Margin="5" Background="#FFEBF5D5"/>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+
+            <!-- RSA Encryption Tab -->
+            <TabItem Header="RSA Encryptie/Decryptie">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- RSA Encryptie sectie -->
+                    <GroupBox Grid.Column="0" Header="RSA Encryptie van AES Sleutel" Margin="5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Content="Selecteer RSA Public Key:" Margin="5"/>
+                            <ComboBox Grid.Row="1" x:Name="cbRsaPublicKeys" Margin="5"/>
+
+                            <Label Grid.Row="2" Content="Selecteer AES sleutel om te encrypteren:" Margin="5"/>
+                            <ComboBox Grid.Row="3" x:Name="cbAesKeysForRsa" Margin="5"/>
+
+                            <TextBox Grid.Row="4" x:Name="txtRsaEncryptOutput" Margin="5" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+
+                            <Button Grid.Row="5" Content="Encrypteren" Margin="5" Background="#FFD5F5D5"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- RSA Decryptie sectie -->
+                    <GroupBox Grid.Column="1" Header="RSA Decryptie van AES Sleutel" Margin="5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Content="Selecteer RSA Private Key:" Margin="5"/>
+                            <ComboBox Grid.Row="1" x:Name="cbRsaPrivateKeys" Margin="5"/>
+
+                            <Label Grid.Row="2" Content="Selecteer versleutelde AES sleutel:" Margin="5"/>
+                            <ComboBox Grid.Row="3" x:Name="cbEncryptedAesKeys" Margin="5"/>
+
+                            <TextBox Grid.Row="4" x:Name="txtRsaDecryptOutput" Margin="5" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+
+                            <Button Grid.Row="5" Content="Decrypteren" Margin="5" Background="#FFEBF5D5"/>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Knop bestanden vergelijken -->
+        <Button Grid.Row="1" Content="Bestanden vergelijken" Margin="0,0,23,5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="132"/>
     </Grid>
 </Window>
+    
